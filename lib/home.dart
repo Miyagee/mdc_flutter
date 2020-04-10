@@ -17,6 +17,8 @@ import 'package:intl/intl.dart';
 
 import 'model/product.dart';
 import 'model/products_repository.dart';
+import 'supplemental/asymmetric_view.dart';
+
 
 class HomePage extends StatelessWidget {
   // TODO: Add a variable for Category (104)
@@ -35,10 +37,9 @@ class HomePage extends StatelessWidget {
     return products.map((product) {
       return Card(
         clipBehavior: Clip.antiAlias,
-        // TODO: ADjust card heights (103)
+        elevation: 0.0,
         child: Column(
-          // TODO: Center (103)
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18.0 / 11.0,
@@ -52,20 +53,20 @@ class HomePage extends StatelessWidget {
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                     child: Column(
-                      // TODO: Align labels to the bottom and center (103)
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      // TODO: Change innermost Column (103)
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        // TODO: Handle overflowing labels (103)
                         Text(
-                          product.name,
-                          style: theme.textTheme.headline6,
+                          product == null ? '' : product.name,
+                          style: theme.textTheme.button,
+                          softWrap: false,
+                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
-                        SizedBox(height: 8.0),
+                        SizedBox(height: 4.0),
                         Text(
-                          formatter.format(product.price),
-                          style: theme.textTheme.bodyText2,
+                          product == null ? '' : formatter.format(product.price),
+                          style: theme.textTheme.caption,
                         )
                       ],
                     ))),
@@ -81,6 +82,7 @@ class HomePage extends StatelessWidget {
     // TODO: Pass Category variable to AsymmetricView (104)
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         leading: IconButton(
           icon: Icon(Icons.menu, semanticLabel: 'menu'),
           onPressed: () {
@@ -101,13 +103,7 @@ class HomePage extends StatelessWidget {
               }),
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: EdgeInsets.all(16.0),
-        childAspectRatio: 8.0 / 9.0,
-        children: _buildGridCards(context),
-      ),
-      resizeToAvoidBottomInset: false,
+      body: AsymmetricView(products: ProductsRepository.loadProducts(Category.all)),
     );
   }
 }
